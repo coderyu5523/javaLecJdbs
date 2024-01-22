@@ -1,24 +1,26 @@
+import dao.BankDAO;
 import db.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 public class BankApp {
     public static void main(String[] args) {
-        Connection conn = DBConnection.getInstance();
-        try {
-            String insert = "insert into account_tb(password,balance,created_at) values(?,?,now())";
-            String update = "update account_tb set balance = balance + ? where number = ?";
-            String delete = "delete from account_tb where number = ?";
+        Scanner sc = new Scanner(System.in);
 
-            PreparedStatement pstmt = conn.prepareStatement(update);
-            pstmt.setInt(1,5000);
-            pstmt.setInt(2,2);
-            int num = pstmt.executeUpdate();
-            System.out.println(num);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        System.out.print("삭제할 계좌번호를 입력해주세요: ");
+        int number = sc.nextInt();
+
+        BankDAO dao = new BankDAO();
+        int result = dao.deleteByNumber(number);
+        if (result ==1){
+            System.out.println("삭제 성공");
+        }else {
+            System.out.println("삭제 실패");
         }
+
+
     }
 }
